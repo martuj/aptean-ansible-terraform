@@ -409,6 +409,72 @@ vi index.html
 </html>
 
 # ansible-playbook implement-vars1.yml
+==================================================================
+Task:6 Implementing Ansible Vault
+==================================================================
+# Switch to labs directory inside /home/ec2-user
+  cd ~/labs 
+
+
+# Create a sample playbook using below.
+
+  vi implement-vault.yml
+
+vi implement-vars1.yml
+---
+- name: first play
+  hosts: all
+  become: yes
+  tasks:
+    - name: create a directory
+      file:
+        path: /test
+        state: directory
+    - name: create a new file
+      file:
+        path: demo.txt
+        mode: 0664
+        state: touch
+
+  # Encrypt the playbook using vault using encrypt option
+  ansible-vault encrypt implement-vault.yml
+
+
+  # Verify that the playbook contents are encrypted
+  cat implement-vault.yml
+
+
+
+  # View the playbook contents (in plaintext) without decrypting by providing the password used for encryption
+  ansible-vault view implement-vault.yml
+
+
+ # To execute the playbook, you need to pass additional option (--ask-vault-pass) as below
+  ansible-playbook --ask-vault-pass implement-vault.yml
+
+
+  # To make any changes to the playbook without decrypting, use edit 
+  ansible-vault edit implement-vault.yml
+  
+
+  # Execute the playbook with changes
+  ansible-playbook --ask-vault-pass implement-vault.yml
+
+
+  # Use rekey option to change the vault password
+  ansible-vault rekey implement-vault.yml
+  
+
+  # Verify the playbook contents are encrypted
+  cat implement-vault.yml
+
+
+  # Decrypt the contents using decrypt option
+  ansible-vault decrypt implement-vault.yml
+
+
+  # Verify that playbook contents are visible in plain-text
+  cat implement-vault.yml
 
 
 
