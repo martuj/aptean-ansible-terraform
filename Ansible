@@ -73,12 +73,12 @@ provider "azurerm" {
   subscription_id = "607e05a3-6e68-4027-bef6-4184bd3922b9"
 }
 
-
+/*
 resource "azurerm_resource_group" "rg" {
   name     = "Martuj-adv-ansibletest"
   location = "East US"
 }
-
+*/
 # remove hash if you wanted to remove the resource group /*
 
 resource "azurerm_resource_group" "rg" {
