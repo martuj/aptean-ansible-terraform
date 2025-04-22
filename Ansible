@@ -57,7 +57,9 @@ sudo apt install -y azure-cli
 az version
 az login
 
--------------------------------------------
+-----------------------------------------------------
+Task:2- Setup ansible managenodes using terraform
+-----------------------------------------------------
 mkdir ~/azure-tf-vms && cd ~/azure-tf-vms
 
 ssh-keygen -t rsa -b 2048 
@@ -216,3 +218,76 @@ ansible@Adv-Ansible:~/azure-tf-vms$ terraform fmt
 ansible@Adv-Ansible:~/azure-tf-vms$ terraform validate
 ansible@Adv-Ansible:~/azure-tf-vms$ terraform plan
 ansible@Adv-Ansible:~/azure-tf-vms$ terraform apply
+
+-------------------------------------------------------
+Task:3 Configure inventory fiel
+-------------------------------------------------------
+# Open the inventory file and update in the /etc/ansible/hosts file with credentials
+
+# cat inventory.txt 
+74.224.99.200
+74.224.127.243
+
+# update the ip address in the inventory file
+ansible@Adv-Ansible:~/azure-tf-vms$ sudo vi /etc/ansible/hosts 
+# This is the default ansible 'hosts' file.
+node1 ansible_ssh_host=74.235.227.177 ansible_user=azureuser ansible_ssh_private_key_file=~/.ssh/id_rsa
+node2 ansible_ssh_host=172.190.28.59 ansible_user=azureuser ansible_ssh_private_key_file=~/.ssh/id_rsa
+
+# ansible all -m command -a "free -h" 
+
+-----------------------------------------------------------------------------------------
+Task:4
+-----------------------------------------------------------------------------------------
+# update the inventory.ini file
+cp inventory.txt inventory.ini
+cp inventory.ini inventory.yml
+
+vi inventory.ini
+
+# add the following lines
+#74.224.99.200
+#74.224.127.243
+
+node1 ansible_ssh_host=74.224.99.200 ansible_user=azureuser ansible_ssh_private_key_file=~/.ssh/id_rsa
+node2 ansible_ssh_host=74.224.127.243 ansible_user=azureuser ansible_ssh_private_key_file=~/.ssh/id_rsa
+
+[frontend]
+node1
+node2
+
+[backend]
+node1
+
+[webservers:children]
+frontend
+backend
+
+[dbservers]
+node1
+node2
+
+[all:children]
+webservers
+dbservers
+
+# save the file :wq
+
+# Test the following commands
+# ansible frontend -m command -a "free -h" -i inventory.ini 
+# ansible frontend:backend -m command -a "free -h" -i inventory.ini 
+# ansible-inventory -i inventory.ini --list
+# ansible-inventory -i inventory.ini --graph
+# ansible-inventory -i inventory.ini --host node1
+# cp inventory.ini inventory.yml
+# ansible-inventory -i inventory.yml --list --yaml
+
+
+
+
+
+
+
+
+
+
