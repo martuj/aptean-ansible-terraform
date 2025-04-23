@@ -393,7 +393,7 @@ save the file
 vi myvariables.yml
 ---
 hostname: all
-package1: httpd
+package1: apache2
 destination: /var/www/html/index.html
 source: /home/ansible/ansible/var/index.html
 
